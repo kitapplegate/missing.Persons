@@ -30,5 +30,23 @@ Optional:
 
   2.	Join tables
 
+Week 3
 
+A. Join the data frames together
+
+B. Clean the age column. figure out why the < > symbols are having issues. 
+
+C. Clean the ethnicity variable 
+
+D. Read Chapters 12 & 13
+
+optional:
+
+Explore the R cheat Sheet
+
+Week 4
+
+A. standardize the ethnicity column
+
+B. work on age range issue
 
