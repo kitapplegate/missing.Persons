@@ -109,19 +109,19 @@ Optional:
 
 #minors
 
-minorsall$DLC <- as.Date(minorsall$DLC , format = "%m/%d/%y")
+minorsall$DLC <- as_date(mdy(minorsall$DLC))
 
 minorsall <- minorsall[order(minorsall$DLC ),]
 
 #adultfemale
 
-adultfemale$DLC <- as.Date(adultfemale$DLC , format = "%m/%d/%y")
+adultfemale$DLC <- as_date(mdy(adultfemale$DLC))
 
 adultfemale <- adultfemale[order(adultfemale$DLC ),]
 
 #adultmale
 
-adultmale$DLC <- as.Date(adultmale$DLC , format = "%m/%d/%y")
+adultmale$DLC <- as_date(mdy(adultmale$DLC))
 
 adultmale <- adultmale[order(adultmale$DLC ),]
 
@@ -145,8 +145,6 @@ Explore the R cheat Sheet
 
 mpAll <- full_join(adultfemale, adultmale, minorsall, by = c("case", "DLC", "lName", "fName", "mAge", "City", "County", "State", "Sex", "ethnicity", "mDate")) 
 
-mpAll$DLC <- as.Date(mpAll$DLC , format = "%m/%d/%y")
-
 #Clean the age column. figure out why the < > symbols are having issues.
 
 #fix for age column used gsub
@@ -166,66 +164,70 @@ B. work on age range issue
 ```{r}
 
 
-levels(as.factor(mpAll$ethnicity))
+levels(as.factor(mpAll$ethnicity2))
 
 mpAll$ethnicity2 <- ifelse(mpAll$ethnicity == "American Indian / Alaska Native" |
                           mpAll$ethnicity == "American Indian / Alaska Native, White / Caucasian",
-                           "American Indian/Alaska Native, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "White / Caucasian", "White, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, Other", "White, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, Hispanic / Latino", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "Black / African American", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "American Indian / Alaska Native", "American Indian / Alaska Native, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Asian", "Asian, Non-Hispanic", 
-                    ifelse(mpAll$ethnicity == "Other", "Multiple/Other",
-                    ifelse(mpAll$ethnicity == "Uncertain", "Multiple/Other",
-                    ifelse(mpAll$ethnicity == "Asian, Hawaiian / Pacific Islander, Other", "Asian, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Uncertain", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, American Indian / Alaska Native", "White, Multiple, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Hawaiian / Pacific Islander", "Native Hawaiian / Other Pacific Islander, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, Asian", "White, Multiple, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Black / African American, American Indian / Alaska Native", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, Uncertain", "White, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Black / African American", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "Black / African American, Asian", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "American Indian / Alaska Native, White / Caucasian", "American Indian/Alaska Native, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, Other", "White, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Black / African American, White / Caucasian", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Hispanic / Latino, White / Caucasian", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, Black / African American", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Black / African American, Uncertain", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Black / African American, Hispanic / Latino", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Other, Asian", "Asian, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Asian, Other", "Asian, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Black / African American, Hawaiian / Pacific Islander", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Asian, Hawaiian / Pacific Islander", "Asian, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Hispanic / Latino, American Indian / Alaska Native", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "Asian, Black / African American", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Asian", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "Asian, Hispanic / Latino", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "", "Multiple/Other",
-                    ifelse(mpAll$ethnicity == "Uncertain, Hispanic / Latino", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "Hawaiian / Pacific Islander, Asian", "Native Hawaiian/Pacific Islander, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "White / Caucasian, Hawaiian / Pacific Islander", "Native Hawaiian/Pacific Islander, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Other, Asian, Hawaiian / Pacific Islander", "Multiple/Other, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Black / African American, Other", "Black, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Other", "Hispanic/Latino",
-                    ifelse(mpAll$ethnicity == "Asian, White / Caucasian", "Asian, Non-Hispanic",
-                    ifelse(mpAll$ethnicity == "Other, Hispanic / Latino", "Hispanic/Latino", NA))))))))))))))))))))))))))))))))))))))))))
+                           "Other",
+                    ifelse(mpAll$ethnicity == "White / Caucasian", "White",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Other", "White",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Hispanic / Latino", "Hispanic",
+                    ifelse(mpAll$ethnicity == "Black / African American", "Black",
+                    ifelse(mpAll$ethnicity == "Asian, Black / African American", "Asian",
+                    ifelse(mpAll$ethnicity == "Asian, Hawaiian / Pacific Islander", "Asian",
+                    ifelse(mpAll$ethnicity == "Asian, Hawaiian / Pacific Islander, Other", "Asian", 
+                    ifelse(mpAll$ethnicity == "Asian, Hispanic / Latino", "Asian", 
+                    ifelse(mpAll$ethnicity == "Asian, Other", "Asian",
+                    ifelse(mpAll$ethnicity == "Asian, White / Caucasian", "Asian",
+                    ifelse(mpAll$ethnicity == "Black / African American", "Black",
+                    ifelse(mpAll$ethnicity == "Black / African American, American Indian / Alaska Native", "Black",
+                    ifelse(mpAll$ethnicity == "Black / African American, Asian", "Black", 
+                    ifelse(mpAll$ethnicity == "Black / African American, Hawaiian / Pacific Islander", "Black",
+                    ifelse(mpAll$ethnicity == "Black / African American, Hispanic / Latino", "Black",
+                    ifelse(mpAll$ethnicity == "Black / African American, Other", "Black",
+                    ifelse(mpAll$ethnicity == "Black / African American, Uncertain", "Black",
+                    ifelse(mpAll$ethnicity == "Black / African American, White / Caucasian", "Black",
+                    ifelse(mpAll$ethnicity == "Hawaiian / Pacific Islander", "Other",
+                    ifelse(mpAll$ethnicity == "Hawaiian / Pacific Islander, Asian", "Other", 
+                    ifelse(mpAll$ethnicity == "Other, Asian", "Other",
+                    ifelse(mpAll$ethnicity == "Other, Asian, Hawaiian / Pacific Islander", "Other",
+                    ifelse(mpAll$ethnicity == "Other, Hispanic / Latino", "Other",
+                    ifelse(mpAll$ethnicity == "Uncertain", "Other",
+                    ifelse(mpAll$ethnicity == "Uncertain, Hispanic / Latino", "Other",
+                    ifelse(mpAll$ethnicity == "Uncertain, White / Caucasian", "Other", 
+                    ifelse(mpAll$ethnicity == "Hispanic / Latino", "Hispanic",
+                    ifelse(mpAll$ethnicity == "Hispanic / Latino, American Indian / Alaska Native", "Hispanic",
+                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Asian", "Hispanic",
+                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Black / African American", "Hispanic",
+                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Other", "Hispanic",
+                    ifelse(mpAll$ethnicity == "Hispanic / Latino, Uncertain", "Hispanic",
+                    ifelse(mpAll$ethnicity == "Hispanic / Latino, White / Caucasian", "Hispanic",
+                    ifelse(mpAll$ethnicity == "White / Caucasian", "White",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, American Indian / Alaska Native", "Other",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Asian", "Asian",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Black / African American", "Black",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Hawaiian / Pacific Islander", "Other",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Hispanic / Latino", "Hispanic",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Other", "White",
+                    ifelse(mpAll$ethnicity == "White / Caucasian, Uncertain", "White",
+                    ifelse(mpAll$ethnicity == "Other", "Other",
+                    ifelse(mpAll$ethnicity == "Asian", "Asian",       
+                    ifelse(mpAll$ethnicity == "", "Other", NA)))))))))))))))))))))))))))))))))))))))))))))
 
 
 ```
 
 ```{r}
 
+levels(as.factor(mpAll$ethnicity2))
 
+ethcnt <- mpAll %>% count(ethnicity2)
+
+sum(mpAll, case)
 ```
 
 ```{r}
-nrow(mpAll$ethnicity2)
-
-old = options(old) 
-cbind(table(mpAll$ethnicity2)/nrow(mpAll$ethnicity2))
+mpAll <- filter(mpAll, DLC >= ymd("1950-07-29"))
 
 ```
 
